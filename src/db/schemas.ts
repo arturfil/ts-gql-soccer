@@ -2,20 +2,26 @@ import { gql } from "apollo-server";
 
 // Schema
 export const typeDefs = gql`
-    type Field {
+    type User {
+        id: ID
         name: String
-        address: String
+        email: String
+        role: String
+        created_at: String
+        updated_at: String
     }
 
-    type Technology {
+    input UserInput {
         name: String
+        email: String
+        password: String
     }
 
     type Query {
-        getFields: [Field]
+        getFields: String
     }
 
-    type Query {
-        getTech: [Technology]
+    type Mutation {
+        newUser(input: UserInput): User
     }
 `
