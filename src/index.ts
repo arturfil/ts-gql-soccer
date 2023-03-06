@@ -1,13 +1,19 @@
 import {ApolloServer, gql} from 'apollo-server';
-import { resolvers, typeDefs } from './db';
 import "dotenv/config"
 import { connectToDb } from './config/db';
+import { resolvers } from './resolvers';
+import { productTypeDefs } from './typedefs/productTypeDefs';
+import { userTypeDefs } from './typedefs/userTypeDefs';
 
 connectToDb();
 
 const port = 8080;
 const server = new ApolloServer({
-    typeDefs, resolvers
+    typeDefs: [
+        userTypeDefs,
+        productTypeDefs
+    ], 
+    resolvers: resolvers
 });
 
 

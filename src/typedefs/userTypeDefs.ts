@@ -1,7 +1,6 @@
 import { gql } from "apollo-server";
 
-// Schema
-export const typeDefs = gql`
+export const userTypeDefs = gql`
     type User {
         id: ID
         name: String
@@ -11,6 +10,15 @@ export const typeDefs = gql`
         updated_at: String
     }
 
+    type Token {
+        token: String
+    }
+
+    input AuthenticatorInput {
+        email: String!
+        password: String!
+    }
+
     input UserInput {
         name: String
         email: String
@@ -18,10 +26,11 @@ export const typeDefs = gql`
     }
 
     type Query {
-        getFields: String
+        getUser(token: String!): User
     }
 
     type Mutation {
-        newUser(input: UserInput): User
+        signUpUser(input: UserInput): User
+        signInUser(input: AuthenticatorInput): Token
     }
 `
