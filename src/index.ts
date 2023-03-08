@@ -1,9 +1,9 @@
 import {ApolloServer, gql} from 'apollo-server';
 import "dotenv/config"
+import {merge} from 'lodash'
 import { connectToDb } from './config/db';
-import { resolvers } from './resolvers';
-import { productTypeDefs } from './typedefs/productTypeDefs';
-import { userTypeDefs } from './typedefs/userTypeDefs';
+import { productResolvers, userResolvers } from './resolvers';
+import { productTypeDefs, userTypeDefs } from './typedefs';
 
 connectToDb();
 
@@ -13,9 +13,8 @@ const server = new ApolloServer({
         userTypeDefs,
         productTypeDefs
     ], 
-    resolvers: resolvers
+    resolvers: merge(userResolvers, productResolvers)
 });
-
 
 server.listen({port}).then(({url}) => {
     console.log(`Server ready at ${url}`);

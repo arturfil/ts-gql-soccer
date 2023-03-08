@@ -10,13 +10,26 @@ export const productTypeDefs = gql`
         updated_at: String
     }
 
-    input ProductInput {
+    type Query {
+        getProducts: [Product]
+        getProductById(id: String): Product
+    }
+
+    input CreateProductInput {
         name: String!
         stock: Int!
         price: Float!
     }
+    
+    input UpdateProductInput {
+        name: String
+        stock: Int
+        price: Float
+    }
 
-    type Query {
-        createProduct(input: ProductInput): Product
+    type Mutation {
+        createProduct(input: CreateProductInput): Product
+        updateProduct(id: ID!, input: UpdateProductInput): Product
+        deleteProduct(id: ID!): String
     }
 `
