@@ -11,8 +11,8 @@ export interface User {
 }
 
 const UserSchema = new Schema<User>({
-    name: {type: String, required: true},
-    email: {type: String, required: true},
+    name: {type: String, required: true, trim: true},
+    email: {type: String, required: true, trim: true, unique: true},
     password: {type: String, required: true},
     role: {type: String, default: "user", enum: ["user", "admin"]},
     created_at: {type: Date, default: new Date()},
