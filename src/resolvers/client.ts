@@ -14,10 +14,12 @@ export const resolvers = {
                 console.log(error);
             }
         },
-        getClientsByVendor: async (_: any, {id}: {id: string}) => {
+        getClientsByVendor: async (_: any, {}, ctx: {id: string}) => {
             try {
+                const { id } = ctx
                 const vendor = await User.findById(id);
                 if (!vendor) throw new Error("Vendor doesn't exist");
+                console.log("found clients");
                 const clients = Client.find({vendor: vendor._id});
                 return clients;
             } catch (error) {

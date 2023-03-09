@@ -26,7 +26,7 @@ export const clientTypeDefs = gql`
     }
 
     type Query {
-        getClientsByVendor(id: String): [Client]
+        getClientsByVendor: [Client]
     }
 
     type Mutation {
