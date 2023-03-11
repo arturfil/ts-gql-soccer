@@ -25,6 +25,16 @@ export const resolvers = {
             } catch (error) {
                 console.log(error);
             }
+        },
+        getClientById: async (_: any, {id}: {id: string}, ctx: {id: string}) => {
+            try {
+                const singleClient = await Client.findById(id);
+                if (!singleClient) throw new Error("Client doesn't exist");
+                if (singleClient.vendor.toString() !== ctx.id) throw new Error("Not authorized for this process");
+                return singleClient;
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
     Mutation: {
@@ -37,6 +47,25 @@ export const resolvers = {
             } catch (error) {
                 console.log(error);
             }
+        },
+        updateClient: async (_: any, {id, input}: {id: string, input: ClientInput}, ctx: {id: string}) => {
+            let clientToUpdate = await Client.findById(id);
+            if (!clientToUpdate) throw new Error("No client found");
+            if (clientToUpdate.vendor.toString() !== ctx.id) {
+                throw new Error("Not authorized for this process");
+            }
+            clientToUpdate = await Client.findByIdAndUpdate({_id: id}, input, {new: true});
+            return clientToUpdate;
+        },
+        deleteClient: async (_: any, {id}: {id: string}, ctx: {id: string}) => {
+            let clientToDelete = await Client.findById(id);
+            if (clientToDelete == null) throw new Error("Client not found");
+            if (clientToDelete.vendor.toString() !== ctx.id) {
+                throw new Error("Not authorized for this process");
+            }
+            await Client.findByIdAndDelete(id);
+            return "Client deleted successfully";
+
         }
     }
 }

@@ -12,6 +12,7 @@ export const resolvers = {
             const user = User.findById(id);
             return user;
         },
+        getUsers: async () => await User.find()
     },
     Mutation: {
         signUpUser: async (_: any, {input}: {input: UserInput}) => {

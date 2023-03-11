@@ -14,23 +14,27 @@ export const userTypeDefs = gql`
         token: String
     }
 
-    input AuthenticatorInput {
+    input AuthInput {
         email: String!
         password: String!
     }
 
     input UserInput {
-        name: String
-        email: String
-        password: String
+        name: String!
+        email: String!
+        password: String!
     }
 
     type Query {
         getUser(token: String!): User
     }
 
+    type Query {
+        getUsers: [User]
+    }
+
     type Mutation {
         signUpUser(input: UserInput): User
-        signInUser(input: AuthenticatorInput): Token
+        signInUser(input: AuthInput): Token
     }
 `

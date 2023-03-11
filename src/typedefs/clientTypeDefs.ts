@@ -13,12 +13,20 @@ export const clientTypeDefs = gql`
         updated_at: String
     }
 
-    input ClientInput {
+    input CreateClientInput {
         name: String!
         last_name: String!
         company: String!
         email: String!
         phone: String!
+    }
+   
+    input UpdateClientInput {
+        name: String
+        last_name: String
+        company: String
+        email: String
+        phone: String
     }
 
     type Query {
@@ -29,7 +37,21 @@ export const clientTypeDefs = gql`
         getClientsByVendor: [Client]
     }
 
-    type Mutation {
-        createClient(input: ClientInput): Client
+    type Query {
+        getClientById(id: String): Client
     }
+
+    type Mutation {
+        createClient(input: CreateClientInput): Client
+    }
+
+    type Mutation {
+        updateClient(id: String, input: UpdateClientInput): Client
+    }
+
+    type Mutation {
+        deleteClient(id: String): String
+    }
+
+
 `

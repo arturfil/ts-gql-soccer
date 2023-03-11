@@ -3,20 +3,27 @@ import "dotenv/config"
 import {merge} from 'lodash'
 import jwt from 'jsonwebtoken';
 import { connectToDb } from './config/db';
-import { clientResolvers, productResolvers, userResolvers } from './resolvers';
+import { clientResolvers, orderResolvers, productResolvers, userResolvers } from './resolvers';
 import { productTypeDefs, userTypeDefs } from './typedefs';
 import { clientTypeDefs } from './typedefs/clientTypeDefs';
+import { orderTypeDefs } from './typedefs/orderTypeDefs';
 
 connectToDb();
 
-const port = 8080;
+const port = process.env.PORT || 8081;
 const server = new ApolloServer({
     typeDefs: [
         userTypeDefs,
         productTypeDefs,
-        clientTypeDefs
+        clientTypeDefs,
+        orderTypeDefs
     ], 
-    resolvers: merge(userResolvers, productResolvers, clientResolvers),
+    resolvers: merge(
+        userResolvers, 
+        productResolvers, 
+        clientResolvers, 
+        orderResolvers
+    ),
     context: ({req}) => {
         const token = req.headers['authorization'] || '';
         if (token) {

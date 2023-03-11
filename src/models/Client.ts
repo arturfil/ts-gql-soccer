@@ -7,9 +7,9 @@ export interface Client {
     company: string;
     email: string;
     phone: string;
+    vendor:  ObjectId
     created_at: Date;
     updated_at: Date;
-    vendor:  ObjectId
 }
 
 const ClientSchema = new Schema<Client>({
