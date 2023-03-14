@@ -35,7 +35,23 @@ export const orderTypeDefs = gql`
         status: OrderStatus
     }
 
+    type Query {
+        getOrders: [Order]
+    }
+
+    type Query {
+        getOrdersByVendor: [Order]
+    }
+
+    type Query {
+        getOrderById(id: ID!): Order
+    }
+
     type Mutation {
         newOrder(input: OrderInput): Order
+    }
+
+    type Mutation {
+        updateOrder(id: String!, input: OrderInput): Order
     }
 `
