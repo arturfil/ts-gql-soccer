@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { OrderInput } from "../interfaces";
+import { OrderInput  } from "../interfaces";
 import Client from "../models/Client";
 import Order from "../models/Order";
 import Product from "../models/Product";
@@ -50,30 +50,39 @@ export const resolvers = {
             return order;
         },
         updateOrder: async(_:any, {id, input}: {id: string, input: OrderInput}, ctx: {id: ObjectId}) => {
-            const { client } = input;
             const orderToUpdate = await Order.findById(id);
             if (!orderToUpdate) throw new Error("Order does not exist");
-
-            const clientInOrder = await Client.findById(client);
+            const clientInOrder = await Client.findById(orderToUpdate.client.toString()); 
             if (!clientInOrder) throw new Error("Client not found in order");
-            
+
             if(clientInOrder.vendor.toString() !== ctx.id.toString()) {
                 throw new Error("You are not authorized for this process");
             }
 
-            input.order.forEach(async product => {
-                const { id } = product;
-                const productInDb = await Product.findById(id);
-                if (product.number > productInDb?.stock!) {
-                    throw new Error("Number of products added exceed the stock of this product");
-                } else {
-                    productInDb!.stock = productInDb?.stock! - Number(product.number);
-                    await productInDb?.save();
-                }
-            });
-            
+            if (input.order) {    
+                input.order.forEach(async product => {
+                    const { id } = product;
+                    const productInDb = await Product.findById(id);
+                    if (product.number > productInDb?.stock!) {
+                        throw new Error("Number of products added exceed the stock of this product");
+                    } else {
+                        productInDb!.stock = productInDb?.stock! - Number(product.number);
+                        await productInDb?.save();
+                    }
+                });
+            } 
             const result = await Order.findOneAndUpdate({_id: id}, input, {new: true});
             return result;
+        },
+        deleteOrder: async (_:any, {id}: {id: string}, ctx: {id: ObjectId}) => {
+            
+            
+            const orderToDelete = await Order.findById(id);
+            /*if (!orderToDelete!.client.toString() !== ctx.id.toString()) {
+                throw new Error("No order found");
+            }*/            
+            await Order.findByIdAndDelete(id);
+            return "Successfully Deleted the Order";
         }
     }
 }
