@@ -26,22 +26,22 @@ export const resolvers = {
             // check that the number of products doesn't exceed the stock number of that product
             input.order.forEach(async product => {
                 const {id} = product;
-                const productToAdd = await Product.findById(id);
-                if (product.number > productToAdd?.stock!) {
+                const productInDb = await Product.findById(id);
+                if (product.number > productInDb?.stock!) {
                     throw new Error("Number of product added to cart is larger than the available stock");
                 } else {
-                    productToAdd!.stock = productToAdd?.stock! - Number(product.number);
-                    await productToAdd?.save();
+                    productInDb!.stock = productInDb?.stock! - Number(product.number);
+                    await productInDb?.save();
                 }
             });
             
             let totalSum = 0;
             for await (let product of input.order) {
-                let productToAdd = await Product.findById(product.id);
-                totalSum += Number(product.number) * Number(productToAdd?.price!);
+                let productInDb = await Product.findById(product.id);
+                totalSum += Number(product.number) * Number(productInDb?.price!);
             }
+
             totalSum = Number(totalSum.toFixed(2));
-            console.log("TOT SUM", totalSum);
             
             const order = new Order(input);
             order.vendor = ctx.id;
