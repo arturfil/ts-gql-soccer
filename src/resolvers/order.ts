@@ -38,7 +38,7 @@ export const resolvers = {
             let totalSum = 0;
             for await (let product of input.order) {
                 let productToAdd = await Product.findById(product.id);
-                totalSum += Number(product.number) * productToAdd?.price!
+                totalSum += Number(product.number) * Number(productToAdd?.price!);
             }
             totalSum = Number(totalSum.toFixed(2));
             console.log("TOT SUM", totalSum);
@@ -74,15 +74,16 @@ export const resolvers = {
             const result = await Order.findOneAndUpdate({_id: id}, input, {new: true});
             return result;
         },
-        deleteOrder: async (_:any, {id}: {id: string}, ctx: {id: ObjectId}) => {
-            
-            
+        deleteOrder: async (_:any, {id}: {id: string}, ctx: {id: ObjectId}) => { 
             const orderToDelete = await Order.findById(id);
-            /*if (!orderToDelete!.client.toString() !== ctx.id.toString()) {
-                throw new Error("No order found");
-            }*/            
+            if (!orderToDelete) throw new Error("order was not found");
+            // if (ctx == undefined) throw new Error("Token was not found");
+
+            if (orderToDelete!.vendor.toString() !== ctx.id.toString()) {
+                throw new Error("You are not authorized for this process");
+            }
             await Order.findByIdAndDelete(id);
             return "Successfully Deleted the Order";
-        }
+        },
     }
 }
