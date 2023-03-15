@@ -40,6 +40,15 @@ export const clientTypeDefs = gql`
     type Query {
         getClientById(id: String): Client
     }
+    
+    type TopClient {
+        total: Float
+        client: [Client]
+    }
+    
+    type Query {
+       getBestClient: [Client] 
+    }
 
     type Mutation {
         createClient(input: CreateClientInput): Client

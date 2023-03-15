@@ -47,6 +47,10 @@ export const orderTypeDefs = gql`
     }
 
     type Query {
+        getOrdersByStatus(status: String): [Order]
+    }
+
+    type Query {
         getOrdersByVendor: [Order]
     }
 

@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { connect, ObjectId } from "mongoose";
 import { OrderInput  } from "../interfaces";
 import Client from "../models/Client";
 import Order from "../models/Order";
@@ -12,6 +12,14 @@ export const resolvers = {
                 return orders;
             } catch (error) {
                 console.log("Error: ", error);
+            }
+        },
+        getOrdersByStatus: async (_: any, {status}: {status: string}, ctx: {id: ObjectId}) => {
+            try {
+                const orders = await Order.find({status, vendor: ctx.id.toString()});
+                return orders;
+            } catch (error) {
+                console.log(error);    
             }
         }
     },
